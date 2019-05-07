@@ -263,6 +263,14 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
         return it;
     }
 
+    public void clearOtp() {
+        for (EditText editText : editTextList) {
+            if (editText != null) {
+                editText.setText("");
+            }
+        }
+    }
+
     /**
      * Returns the value of the Pinview
      *

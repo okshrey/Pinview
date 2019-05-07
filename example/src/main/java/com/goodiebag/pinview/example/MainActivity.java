@@ -7,14 +7,17 @@ import android.widget.Toast;
 import com.goodiebag.pinview.Pinview;
 public class MainActivity extends AppCompatActivity {
     private Pinview pinview1;
+    private Pinview pinview4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         pinview1= (Pinview) findViewById(R.id.pinview1);
+        pinview4= (Pinview) findViewById(R.id.pinview4);
         pinview1.setPinViewEventListener(new Pinview.PinViewEventListener() {
             @Override
             public void onDataEntered(Pinview pinview, boolean fromUser) {
+                pinview4.clearOtp();
                 Toast.makeText(MainActivity.this, pinview.getValue(), Toast.LENGTH_SHORT).show();
             }
         });
