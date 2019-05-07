@@ -361,6 +361,10 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
                 editText.setText("");
             }
         }
+
+        if (editTextList.size() > 0) {
+            editTextList.get(0).requestFocus();
+        }
     }
 
     @Override
