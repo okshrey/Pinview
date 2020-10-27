@@ -70,9 +70,12 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
     private int mPinHeight = 50;
     private int mSplitWidth = 20;
     private boolean mCursorVisible = false;
+    private boolean mHidePin = false;
     private boolean mDelPressed = false;
     @DrawableRes
     private int mPinBackground = R.drawable.sample_background;
+    @DrawableRes
+    private int mFilledBackground = R.drawable.sample_background;
     private boolean mPassword = false;
     private String mHint = "";
     private InputType inputType = InputType.TEXT;
@@ -140,7 +143,7 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
                 for (EditText editText : editTextList) {
                     if (editText.length() == 0) {
                         editText.requestFocus();
-                        if(mForceKeyboard) {
+                        if (mForceKeyboard) {
                             InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                         }
@@ -196,11 +199,13 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
         if (attrs != null) {
             final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Pinview, defStyleAttr, 0);
             mPinBackground = array.getResourceId(R.styleable.Pinview_pinBackground, mPinBackground);
+            mFilledBackground = array.getResourceId(R.styleable.Pinview_filledBackground, mPinBackground);
             mPinLength = array.getInt(R.styleable.Pinview_pinLength, mPinLength);
             mPinHeight = (int) array.getDimension(R.styleable.Pinview_pinHeight, mPinHeight);
             mPinWidth = (int) array.getDimension(R.styleable.Pinview_pinWidth, mPinWidth);
             mSplitWidth = (int) array.getDimension(R.styleable.Pinview_splitWidth, mSplitWidth);
             mCursorVisible = array.getBoolean(R.styleable.Pinview_cursorVisible, mCursorVisible);
+            mHidePin = array.getBoolean(R.styleable.Pinview_hidePin, mHidePin);
             mPassword = array.getBoolean(R.styleable.Pinview_password, mPassword);
             mForceKeyboard = array.getBoolean(R.styleable.Pinview_forceKeyboard, mForceKeyboard);
             mHint = array.getString(R.styleable.Pinview_hint);
@@ -224,7 +229,9 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
         styleEditText.setLayoutParams(params);
         styleEditText.setGravity(Gravity.CENTER);
         styleEditText.setCursorVisible(mCursorVisible);
-
+        if (mHidePin) {
+            styleEditText.setTextColor(getContext().getResources().getColor(R.color.transparent));
+        }
         if (!mCursorVisible) {
             styleEditText.setClickable(false);
             styleEditText.setHint(mHint);
@@ -417,6 +424,8 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
             if (!fromSetValue && index + 1 == mPinLength && mListener != null)
                 mListener.onDataEntered(this, true);
         }
+
+        setEditTextsBackgroundResource();
     }
 
     @Override
@@ -461,6 +470,8 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
                 if (editTextList.get(currentTag).getText().length() > 0)
                     editTextList.get(currentTag).setText("");
             }
+            setEditTextsBackgroundResource();
+
             return true;
 
         }
@@ -594,6 +605,16 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
         this.mPinBackground = res;
         for (EditText editText : editTextList)
             editText.setBackgroundResource(res);
+    }
+
+    private void setEditTextsBackgroundResource() {
+        for (EditText editText : editTextList) {
+            if (!editText.getText().toString().isEmpty()) {
+                editText.setBackgroundResource(mFilledBackground);
+            } else {
+                editText.setBackgroundResource(mPinBackground);
+            }
+        }
     }
 
     @Override
