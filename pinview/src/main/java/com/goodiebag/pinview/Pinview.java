@@ -655,5 +655,8 @@ public class Pinview extends LinearLayout implements TextWatcher, View.OnFocusCh
         this.mListener = listener;
     }
 
+    public void setForceKeyboard(boolean mForceKeyboard) {
+        this.mForceKeyboard = mForceKeyboard;
+    }
 
 }
